@@ -6,10 +6,10 @@ import { useState } from "react";
 
 function Calculator(){
     const [workSpace,setWorkSpace]=useState("")
-    const [result,setResult]=useState(0);
+    const [result,setResult]=useState("0");
     const reset = ()=>{
         setWorkSpace("");
-        setResult(0);
+        setResult("0");
     }
     
     const getKeys = calcKeys.map((val)=>{
