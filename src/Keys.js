@@ -49,10 +49,16 @@ function Keys({id,value,setworkspace,setresult,text,workspace,result}){
             }
             if("="===value){
                 if(workspace.includes("=")){
-                    setworkspace((prev)=>{   
+                    const donow2 =()=>setresult(eval(workspace.slice(0,-1)).toString());
+                    donow2();
+                  const donow=()=> { setworkspace((prev)=>{   
                         return result+RegExp(/[/*\-+][0-9]+\.?[0-9]*=/g).exec(prev);
                     })
-                    incrementing=true;
+                    console.log("donig it now");
+                }
+                    donow();
+                    
+                   
                 }
                 if(!workspace.includes("=")){
                     setworkspace((prev)=>{
