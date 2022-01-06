@@ -1,14 +1,16 @@
-let secondoperand = null;
 
+let secondoperand = null;
+let showingresult=null;
+let incrementing=null;
 
 function Keys({id,value,setworkspace,setresult,text,workspace,result}){
     const reset=()=>{
         setresult("0");
         setworkspace("");
     }
-    
-    const handleClick =()=>{
-        
+
+        const handleClick =()=>{
+            
             if (id==="clear"){
                 reset();
             }
@@ -21,39 +23,53 @@ function Keys({id,value,setworkspace,setresult,text,workspace,result}){
                         return prev.substring(1);
                     }) 
                 }
-
-
-                if(secondoperand||workspace[workspace.length-1]==="="){
-                   setresult("");
-                   secondoperand=false;
+                if(secondoperand){
+                    setresult("");
+                    secondoperand=false;
                 }
-                
+                if(showingresult){
+                    setresult("");
+                    showingresult=false;
+                }
                 setresult((prev)=>{
                     return prev.toString()+value.toString();
-                 })
-                }
+                })
+            }
             
             if(["*","+","-","/"].includes(value)){
                 if(workspace.includes("*")||workspace.includes("+")||workspace.includes("-")||workspace.includes("/")){
-                        setworkspace((prev)=>{
-                            return prev.replace(prev[prev.length-1],value);
-                        })
+                    setworkspace((prev)=>{
+                        return prev.replace(prev[prev.length-1],value);
+                    })
                 }
                 setworkspace(result+value);
                 secondoperand=true;
                 console.log(secondoperand);
-               // setresult("0");
+                
             }
             if("="===value){
-                setworkspace((prev)=>{
-                    return prev.toString()+result.toString()+value;
-                });
-                setresult(eval(workspace+result).toString());
+                if(workspace.includes("=")){
+                    setworkspace((prev)=>{   
+                        return result+RegExp(/[/*\-+][0-9]+\.?[0-9]*=/g).exec(prev);
+                    })
+                    incrementing=true;
+                }
+                if(!workspace.includes("=")){
+                    setworkspace((prev)=>{
+                        return prev.toString()+result.toString()+value;
+                    });
+                    setresult(eval(workspace+result).toString());
+                    showingresult=true;
+                }
+            }
+            if (incrementing){
+                setresult(eval(workspace.slice(0,-1)));
+                incrementing=false;
             }
         }
+        
+        return <div className="key" id={id} value={value} onClick={handleClick}>{text}</div>
+    }
     
-    return <div className="key" id={id} value={value} onClick={handleClick}>{text}</div>
-}
-
-
-export default Keys;
+    
+    export default Keys;
