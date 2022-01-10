@@ -1,87 +1,27 @@
 
-let secondoperand = null;
-let showingresult=null;
-let incrementing=null;
-
-function Keys({id,value,setworkspace,setresult,text,workspace,result}){
-    const reset=()=>{
-        setresult("0");
-        setworkspace("");
-    }
-
-        const handleClick =()=>{
+function Keys({eq,dec,op,num,init}){ 
+        return ( 
+        <div>
+            <button  className="key" id="clear" onClick={init}>AC</button>
+            <button  className="key" id="seven" onClick={num}>7</button>
+            <button  className="key" id="eight" onClick={num}>8</button>
+            <button  className="key" id="nine" onClick={num}>9</button>
+            <button  className="key" id="division" onClick={op}>/</button>
+            <button  className="key" id="four" onClick={num}>4</button>
+            <button  className="key" id="five" onClick={num}>5</button>
+            <button  className="key" id="six" onClick={num}>6</button>
+            <button  className="key" id="multiplication" onClick={op}>*</button>
+            <button  className="key" id="one" onClick={num}>1</button>
+            <button  className="key" id="two" onClick={num}>2</button>
+            <button  className="key" id="three" onClick={num}>3</button>
+            <button  className="key" id="addition" onClick={op}>+</button>
+            <button  className="key" id="subtraction" onClick={op}>-</button>
+            <button  className="key" id="zero" onClick={num}>0</button>
+            <button  className="key" id="decimal"onClick={dec}>.</button>
+            <button  className="key" id="equals"onClick={eq}>=</button>
             
-            if (id==="clear"){
-                reset();
-            }
-            if(["0","1","2","3","4","5","6","7","8","9","."].includes(value)){
-                //dont allow double .
-                if(result.includes(".")&&value===".") return
-                // dont allow 0 on the left
-                if(result[0]==="0") {
-                    setresult((prev)=>{
-                        return prev.substring(1);
-                    }) 
-                }
-                if(secondoperand){
-                    setresult("");
-                    secondoperand=false;
-                }
-                if(showingresult){
-                    setresult("");
-                    showingresult=false;
-                }
-                setresult((prev)=>{
-                    return prev.toString()+value.toString();
-                })
-            }
-            
-            if(["*","+","-","/"].includes(value)){
-                if((workspace.includes("*")||workspace.includes("+")||workspace.includes("-")||workspace.includes("/"))&&!workspace.includes("=")){
-                    setworkspace((prev)=>{
-                        return prev.replace(prev[prev.length-1],value);
-                    })
-                }
-
-                setworkspace(result+value);
-                secondoperand=true;
-                if(secondoperand&&(workspace.includes("+")||workspace.includes("-")||workspace.includes("/")||workspace.includes("*"))&&!workspace.includes("=")){
-                    setworkspace((prev)=>{
-                        return eval(workspace+result).toString()+value;
-                    })
-                    setresult(eval(workspace+result).toString());
-                }
-            }
-            if("="===value){
-                if(workspace.includes("=")){ 
-                    function doing() {
-                        setresult((prev) => {
-                            return eval(prev + RegExp(/[/*\-+][0-9]+\.?[0-9]*/g).exec(workspace)).toString();
-                        });
-                    }
-                    doing();
-                  function donow() {
-                        setworkspace((prev) => {
-                            return result + RegExp(/[/*\-+][0-9]+\.?[0-9]*=/g).exec(prev);
-                        });
-                    }
-                    donow();
-                }
-                if(!workspace.includes("=")){
-                    setworkspace((prev)=>{
-                        return prev.toString()+result.toString()+value;
-                    });
-                    setresult(eval(workspace+result).toString());
-                    showingresult=true;
-                }
-            }
-            if (incrementing){
-                setresult(eval(workspace.slice(0,-1)));
-                incrementing=false;
-            }
-        }
-        
-        return <div className="key" id={id} value={value} onClick={handleClick}>{text}</div>
+        </div>
+        )
     }
     
     

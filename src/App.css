@@ -2,16 +2,17 @@
   text-align: center;
 }
 
-#display{
-  display: flex;
-  flex: 1 100%;
-  height: 50px;
-  margin-right: 20px;
-}
-#display>span{
+#output{
   align-self: flex-end;
   width: 100%;
   text-align: right;
+  margin-right: 20px;
+}
+#display{
+  align-self: flex-end;
+  width: 100%;
+  text-align: right;
+  color: blue;
 }
 
 #calculator{
@@ -23,8 +24,9 @@
 }
 .key:hover{
   background: rgb(233, 218, 218);
-  border:1px solid gray;
+  
 }
+
 #clear:hover{
   background: tomato;
 }
@@ -40,8 +42,9 @@
   border:1px hidden rgba(128, 128, 128);
   user-select: none;
 }
+
 #clear{
-  margin-right: 70%;
+  margin-right: 75%;
 }
 
 @media (prefers-reduced-motion: no-preference) {
