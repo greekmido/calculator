@@ -37,28 +37,35 @@ function Keys({id,value,setworkspace,setresult,text,workspace,result}){
             }
             
             if(["*","+","-","/"].includes(value)){
-                if(workspace.includes("*")||workspace.includes("+")||workspace.includes("-")||workspace.includes("/")){
+                if((workspace.includes("*")||workspace.includes("+")||workspace.includes("-")||workspace.includes("/"))&&!workspace.includes("=")){
                     setworkspace((prev)=>{
                         return prev.replace(prev[prev.length-1],value);
                     })
                 }
+
                 setworkspace(result+value);
                 secondoperand=true;
-                console.log(secondoperand);
-                
+                if(secondoperand&&(workspace.includes("+")||workspace.includes("-")||workspace.includes("/")||workspace.includes("*"))&&!workspace.includes("=")){
+                    setworkspace((prev)=>{
+                        return eval(workspace+result).toString()+value;
+                    })
+                    setresult(eval(workspace+result).toString());
+                }
             }
             if("="===value){
-                if(workspace.includes("=")){
-                    const donow2 =()=>setresult(eval(workspace.slice(0,-1)).toString());
-                    donow2();
-                  const donow=()=> { setworkspace((prev)=>{   
-                        return result+RegExp(/[/*\-+][0-9]+\.?[0-9]*=/g).exec(prev);
-                    })
-                    console.log("donig it now");
-                }
+                if(workspace.includes("=")){ 
+                    function doing() {
+                        setresult((prev) => {
+                            return eval(prev + RegExp(/[/*\-+][0-9]+\.?[0-9]*/g).exec(workspace)).toString();
+                        });
+                    }
+                    doing();
+                  function donow() {
+                        setworkspace((prev) => {
+                            return result + RegExp(/[/*\-+][0-9]+\.?[0-9]*=/g).exec(prev);
+                        });
+                    }
                     donow();
-                    
-                   
                 }
                 if(!workspace.includes("=")){
                     setworkspace((prev)=>{
