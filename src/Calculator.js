@@ -4,58 +4,64 @@ import Keys from "./Keys";
 import { Output } from "./Output";
 function Calculator(){
 
-    const[output,setOutput]=useState("0");
-    const[display,setDisplay]=useState("");
-    const[firstOp,setFirstop]=useState("");
-    const[secondOp,setSecondop]=useState("");
-    const[operator,setOperator]=useState("");
-    
-    const handeldec = (e)=>{
-        if (output.includes(".")){
-            return
+    const[workarea,setWorkarea]=useState("0");
+    const[formula,setFormula]=useState("");
+    const[isSecondop,setisSecondop]=useState(null);
+    function handeldec(e) {
+        if (workarea.includes(".")) {
+            return;
         }
-        setOutput((prev)=>{
-            return prev+e.target.innerHTML;
-        })
+        setWorkarea((prev) => {
+            return prev + e.target.innerHTML;
+        });
     }
 
 
 
-    const handlenum =(e)=>{
+    function handlenum(e) {
         //no 0 to the left
-        if(output[0]==="0"){
-        setOutput((prev)=>{
+        if (workarea[0] === "0") {
+            setWorkarea((prev) => {
                 return prev.substring(1);
             }
-    );
+            );
         }
-        setOutput((prev)=>{
-            return prev.toString()+e.target.innerHTML.toString();
-        })
+        if (/[-/+*]/.test(formula)&&isSecondop) {
+            setWorkarea("");
+            setisSecondop(false);
+        } 
+        setWorkarea((prev)=>{
+            return prev+e.target.innerHTML;
+        });
     }
 
 
 
 
-    const handleop =(e)=>{
-        if((display.includes("*")||display.includes("+")||display.includes("-")||display.includes("/"))&&!display.includes("=")){
-            setDisplay((prev)=>{
-                return prev.replace(prev[prev.length-1],e.target.innerHTML);
+    function handleop(e) {
+        if (/[-/+*]/.test(formula)){
+            setFormula((prev)=>{
+                return prev.replace(/[-/+*]/,e.target.innerHTML);
+            })
+        }else{
+        setFormula(workarea+e.target.innerHTML);
+        setisSecondop(true);
+        }
+        if(setisSecondop&&/[-/+*]/.test(formula)){
+            setFormula((prev)=>{
+                return Function(prev+workarea);
             })
         }
-        setDisplay(output+e.target.innerHTML);
-        }
-    
-    const handleeq =()=>{
 
     }
-    const handleclear =()=>{
-
+    function handleeq(e) {
+    }
+    function handleclear(e) {
     }
  
     return (<div id="calculator">
-        <Display disp={display}/>
-        <Output out={output}/>
+        <Display disp={formula}/>
+        <Output out={workarea}/>
         <Keys op={handleop} num={handlenum} dec={handeldec} eq={handleeq} init={handleclear}/>
     </div>)
 }
