@@ -6,8 +6,9 @@ function Calculator(){
 
     const[workarea,setWorkarea]=useState("0");
     const[formula,setFormula]=useState("");
-    const[isSecondop,setisSecondop]=useState(null);
-    function handeldec(e) {
+    const[isSecondop,setisSecondop]=useState(false);
+    const[isEval,setEval]=useState(false);
+    const handeldec=(e)=> {
         if (workarea.includes(".")) {
             return;
         }
@@ -18,7 +19,7 @@ function Calculator(){
 
 
 
-    function handlenum(e) {
+    const handlenum=(e)=>{
         //no 0 to the left
         if (workarea[0] === "0") {
             setWorkarea((prev) => {
@@ -26,9 +27,10 @@ function Calculator(){
             }
             );
         }
-        if (/[-/+*]/.test(formula)&&isSecondop) {
+        if (((/[-/+*]/.test(formula)&&isSecondop)||isEval)&&/[-/+*]/.test(formula[formula.length-1])) {
             setWorkarea("");
             setisSecondop(false);
+            setEval(false); 
         } 
         setWorkarea((prev)=>{
             return prev+e.target.innerHTML;
@@ -38,25 +40,38 @@ function Calculator(){
 
 
 
-    function handleop(e) {
+    const handleop=(e)=> {
         if (/[-/+*]/.test(formula)){
-            setFormula((prev)=>{
-                return prev.replace(/[-/+*]/,e.target.innerHTML);
-            })
-        }else{
-        setFormula(workarea+e.target.innerHTML);
-        setisSecondop(true);
+            setFormula((prev)=>{return prev.replace(/[-/+*]/,e.target.innerHTML)});
+            console.log(e.target.innerHTML);
         }
-        if(setisSecondop&&/[-/+*]/.test(formula)){
-            setFormula((prev)=>{
-                return Function(prev+workarea);
-            })
+        if (!/[-/+*]/.test(formula)){
+            setFormula(workarea+e.target.innerHTML);
+            setisSecondop(true);
+            console.log("checked if no op in formula"+e.target.innerHTML);
+        }
+
+        if(/[-/+*]/.test(formula[formula.length-1])&&!isSecondop){
+            let result =Function("return "+formula+workarea)();
+            setEval(true);
+            setFormula(result+e.target.innerHTML);
+            setWorkarea(result);
+            console.log("checked last char if op")
+        }
+        if(formula.includes("=")){
+            setFormula(workarea+e.target.innerHTML)
+            console.log("checked if eval is true");
         }
 
     }
-    function handleeq(e) {
+    const handleeq=(e)=> {
+        if(/[-/+*]/.test(formula[formula.length-1])){
+            let result = Function("return "+formula+workarea)();
+            setWorkarea(result);
+            setFormula(formula+workarea+"=");
+        }
     }
-    function handleclear(e) {
+    const handleclear=(e)=> {
     }
  
     return (<div id="calculator">
