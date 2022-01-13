@@ -42,36 +42,44 @@ function Calculator(){
 
     const handleop=(e)=> {
         if (/[-/+*]/.test(formula)){
-            setFormula((prev)=>{return prev.replace(/[-/+*]/,e.target.innerHTML)});
-            console.log(e.target.innerHTML);
+            
+            if(e.target.innerHTML==="-"){
+                setisSecondop(false);
+                setWorkarea("-");
+            }else{
+            setFormula((prev)=>{return prev.replace(/[/+*]/,e.target.innerHTML)});
         }
+    }
         if (!/[-/+*]/.test(formula)){
             setFormula(workarea+e.target.innerHTML);
             setisSecondop(true);
-            console.log("checked if no op in formula"+e.target.innerHTML);
         }
 
         if(/[-/+*]/.test(formula[formula.length-1])&&!isSecondop){
             let result =Function("return "+formula+workarea)();
             setEval(true);
             setFormula(result+e.target.innerHTML);
-            setWorkarea(result);
-            console.log("checked last char if op")
+            setWorkarea(Math.round((result + Number.EPSILON) * 10000) / 10000);
         }
         if(formula.includes("=")){
             setFormula(workarea+e.target.innerHTML)
-            console.log("checked if eval is true");
         }
 
     }
     const handleeq=(e)=> {
         if(/[-/+*]/.test(formula[formula.length-1])){
             let result = Function("return "+formula+workarea)();
-            setWorkarea(result);
+            setWorkarea(Math.round((result + Number.EPSILON) * 10000) / 10000);
             setFormula(formula+workarea+"=");
+            setisSecondop(false);
+            setEval(true);
         }
     }
     const handleclear=(e)=> {
+        setEval(false);
+        setFormula("");
+        setWorkarea("0");
+        setisSecondop(false);
     }
  
     return (<div id="calculator">

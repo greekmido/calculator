@@ -2,7 +2,7 @@
 
 
 function Display(props){
-    return <div id="display">{props.disp}</div>
+    return <div id="display"><span>{props.disp}</span></div>
 }
 
 export default Display;
